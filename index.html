@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Заметки</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>📝 Мои заметки</h1>
+      <span id="status-badge" class="badge badge--online">Онлайн</span>
+    </header>
+
+    <form id="note-form" class="note-form">
+      <input type="text" id="note-input" placeholder="Введите заметку…" required />
+      <button type="submit">Добавить</button>
+    </form>
+
+    <ul id="notes-list" class="notes-list"></ul>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
