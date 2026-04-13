@@ -3,26 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Заметки — Офлайн-приложение</title>
-
-  <!-- Web App Manifest -->
   <link rel="manifest" href="/manifest.json" />
-
-  <!-- Цвет темы браузера -->
-  <meta name="theme-color" content="#4f46e5" />
-
-  <!-- Для Android -->
   <meta name="mobile-web-app-capable" content="yes" />
-
-  <!-- Для iOS -->
+  <meta name="theme-color" content="#4f46e5" />
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Заметки" />
-
-  <!-- Фавикон -->
   <link rel="icon" href="icons/favicon-32x32.png" type="image/png" />
-
+  <title>Заметки (13-18)</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -32,12 +20,14 @@
       <span id="status-badge" class="badge badge--online">Онлайн</span>
     </header>
 
-    <form id="note-form" class="note-form">
-      <input type="text" id="note-input" placeholder="Введите заметку…" required />
-      <button type="submit">Добавить</button>
-    </form>
+    <nav class="filter-bar">
+      <button id="home-btn" class="filter-btn active">Главная</button>
+      <button id="about-btn" class="filter-btn">О приложении</button>
+    </nav>
 
-    <ul id="notes-list" class="notes-list"></ul>
+    <main id="app-content" style="padding:1rem;">
+      <!-- Сюда загружается динамический контент -->
+    </main>
   </div>
 
   <script src="app.js"></script>

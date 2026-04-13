@@ -1,4 +1,7 @@
-const CACHE_NAME = 'notes-v2';
+'use strict';
+
+const CACHE_NAME         = 'notes-cache-v3';
+const DYNAMIC_CACHE_NAME = 'dynamic-content-v1';
 
 const ASSETS = [
   '/',
@@ -27,7 +30,8 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+        keys.filter(k => k !== CACHE_NAME && k !== DYNAMIC_CACHE_NAME)
+            .map(k => caches.delete(k))
       )
     ).then(() => self.clients.claim())
   );
@@ -35,10 +39,30 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+  if (url.origin !== location.origin) return;
+
+  // Динамические страницы — Network First
+  if (url.pathname.startsWith('/content/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(res => {
+          const clone = res.clone();
+          caches.open(DYNAMIC_CACHE_NAME).then(c => c.put(event.request, clone));
+          return res;
+        })
+        .catch(() =>
+          caches.match(event.request)
+            .then(cached => cached || caches.match('/content/home.html'))
+        )
+    );
+    return;
+  }
+
+  // Статика — Cache First
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request);
-    })
+    caches.match(event.request)
+      .then(cached => cached || fetch(event.request))
   );
 });
