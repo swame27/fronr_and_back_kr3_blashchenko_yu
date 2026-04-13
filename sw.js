@@ -65,4 +65,18 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(cached => cached || fetch(event.request))
   );
+}); // ← эта скобка закрывает fetch — она была пропущена
+
+// Push-уведомления — отдельный обработчик
+self.addEventListener('push', event => {
+  let data = { title: 'Новое уведомление', body: '' };
+  if (event.data) data = event.data.json();
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: '/icons/android-chrome-192x192.png',
+      badge: '/icons/favicon-48x48.png'
+    })
+  );
 });

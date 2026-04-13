@@ -29,7 +29,18 @@
       <!-- Сюда загружается динамический контент -->
     </main>
   </div>
+  <footer style="padding:1rem; text-align:center; border-top:1px solid #eee;">
+    <button id="enable-push"
+      style="padding:8px 16px; background:#16a34a; color:white; border:none; border-radius:6px; cursor:pointer;">
+      Включить уведомления
+    </button>
+    <button id="disable-push"
+      style="display:none; padding:8px 16px; background:#dc2626; color:white; border:none; border-radius:6px; cursor:pointer;">
+      Отключить уведомления
+    </button>
+  </footer>
 
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
