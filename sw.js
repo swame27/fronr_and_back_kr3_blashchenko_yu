@@ -18,6 +18,8 @@ const ASSETS = [
   '/icons/apple-touch-icon.png'
 ];
 
+// ── Install ───────────────────────────────────────────────────────────────────
+
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -25,6 +27,8 @@ self.addEventListener('install', event => {
       .then(() => self.skipWaiting())
   );
 });
+
+// ── Activate ──────────────────────────────────────────────────────────────────
 
 self.addEventListener('activate', event => {
   event.waitUntil(
@@ -36,6 +40,8 @@ self.addEventListener('activate', event => {
     ).then(() => self.clients.claim())
   );
 });
+
+// ── Fetch ─────────────────────────────────────────────────────────────────────
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
@@ -65,18 +71,46 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(cached => cached || fetch(event.request))
   );
-}); // ← эта скобка закрывает fetch — она была пропущена
+});
 
-// Push-уведомления — отдельный обработчик
+// ── Push ──────────────────────────────────────────────────────────────────────
+
 self.addEventListener('push', event => {
-  let data = { title: 'Новое уведомление', body: '' };
+  let data = { title: 'Новое уведомление', body: '', reminderId: null };
   if (event.data) data = event.data.json();
 
+  const options = {
+    body: data.body,
+    icon: '/icons/android-chrome-192x192.png',
+    badge: '/icons/favicon-48x48.png',
+    data: { reminderId: data.reminderId }
+  };
+
+  if (data.reminderId) {
+    options.actions = [
+      { action: 'snooze', title: 'Отложить на 5 минут' }
+    ];
+  }
+
   event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: '/icons/android-chrome-192x192.png',
-      badge: '/icons/favicon-48x48.png'
-    })
+    self.registration.showNotification(data.title, options)
   );
+});
+
+// ── Notification click ────────────────────────────────────────────────────────
+
+self.addEventListener('notificationclick', event => {
+  const notification = event.notification;
+  const action       = event.action;
+
+  if (action === 'snooze') {
+    const reminderId = notification.data.reminderId;
+    event.waitUntil(
+      fetch(`http://localhost:3001/snooze?reminderId=${reminderId}`, { method: 'POST' })
+        .then(() => notification.close())
+        .catch(err => console.error('Snooze failed:', err))
+    );
+  } else {
+    notification.close();
+  }
 });

@@ -1,11 +1,22 @@
 <div class="home-content">
-  <h2 class="is-center">Добавить заметку</h2>
+  <h2 style="text-align:center; margin-bottom:1rem;">Добавить заметку</h2>
+
   <form id="note-form" style="display:flex; gap:8px; margin-bottom:1rem;">
     <input style="flex:1; padding:8px; border:1px solid #ccc; border-radius:6px;"
       type="text" id="note-input" placeholder="Введите текст заметки" required>
     <button style="padding:8px 16px; background:#4f46e5; color:white; border:none; border-radius:6px; cursor:pointer;"
       type="submit">Добавить</button>
   </form>
-  <h2 style="margin-top:1.5rem;">Список заметок</h2>
+
+  <form id="reminder-form" style="display:flex; gap:8px; margin-bottom:1.5rem; flex-wrap:wrap;">
+    <input style="flex:2; min-width:160px; padding:8px; border:1px solid #ccc; border-radius:6px;"
+      type="text" id="reminder-text" placeholder="Текст напоминания" required>
+    <input style="flex:1; min-width:160px; padding:8px; border:1px solid #ccc; border-radius:6px;"
+      type="datetime-local" id="reminder-time" required>
+    <button style="padding:8px 16px; background:#16a34a; color:white; border:none; border-radius:6px; cursor:pointer;"
+      type="submit">Добавить с напоминанием</button>
+  </form>
+
+  <h2 style="text-align:center; margin-bottom:1rem;">Список заметок</h2>
   <ul id="notes-list" style="list-style:none; padding:0;"></ul>
 </div>
