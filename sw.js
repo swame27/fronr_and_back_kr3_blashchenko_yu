@@ -1,11 +1,20 @@
-'use strict';
+const CACHE_NAME = 'notes-v2';
 
-const CACHE_NAME = 'notes-v1';
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/app.js',
+  '/manifest.json',
+  '/icons/favicon-16x16.png',
+  '/icons/favicon-32x32.png',
+  '/icons/favicon-48x48.png',
+  '/icons/favicon-64x64.png',
+  '/icons/android-chrome-192x192.png',
+  '/icons/android-chrome-512x512.png',
+  '/icons/apple-touch-icon.png'
+];
 
-// Список файлов для кэширования
-const ASSETS = ['/', '/index.html', '/style.css', '/app.js'];
-
-// install — кэшируем файлы при первой установке
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -14,7 +23,6 @@ self.addEventListener('install', event => {
   );
 });
 
-// activate — удаляем старые кэши
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -25,14 +33,12 @@ self.addEventListener('activate', event => {
   );
 });
 
-//fetch — отдаём из кэша, если есть; иначе идём в сеть
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-
   event.respondWith(
     caches.match(event.request).then(cached => {
-      if (cached) return cached;           // нашли в кэше — отдаём
-      return fetch(event.request);         // нет в кэше — идём в сеть
+      if (cached) return cached;
+      return fetch(event.request);
     })
   );
 });
